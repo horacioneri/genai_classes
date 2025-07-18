@@ -4,7 +4,7 @@ import json
 import io
 import pdfplumber
 from ics import Calendar
-from openai import OpenAI
+from openai import AzureOpenAI
 from login_page import login
 import plotly.express as px
 
