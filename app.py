@@ -15,8 +15,13 @@ if not st.session_state["logged_in"]:
     login()
 
 else:
-    client = AzureOpenAI()
-    
+    client = AzureOpenAI(
+        api_key=st.secrets["AZURE_OPENAI_KEY"],
+        azure_endpoint=st.secrets["AZURE_OPENAI_ENDPOINT"],
+        api_version=st.secrets["AZURE_OPENAI_API_VERSION"]
+    )
+
+
     st.set_page_config(page_title="AI Agent Document Analyzer", layout="wide")
     st.title("AI Agent Document Analyzer with Chat and Visualization")
 
