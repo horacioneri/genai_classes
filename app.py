@@ -4,7 +4,7 @@ import json
 import io
 import pdfplumber
 from ics import Calendar
-from openai import OpenAI
+from openai import AzureOpenAI
 from login_page import login
 import plotly.express as px
 
@@ -15,10 +15,10 @@ if not st.session_state["logged_in"]:
     login()
 
 else:
-    client = OpenAI()
+    client = AzureOpenAI(azure_endpoint = os.environ['AZURE_OPENAI_API_URL'], api_version=api_version)
 
     st.set_page_config(page_title="AI Agent Document Analyzer", layout="wide")
-    st.title("📄 AI Agent Document Analyzer with Chat and Visualization")
+    st.title("AI Agent Document Analyzer with Chat and Visualization")
 
     # Session state initialization
     if "messages" not in st.session_state:
