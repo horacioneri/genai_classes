@@ -5,7 +5,14 @@ import io
 import pdfplumber
 from ics import Calendar
 from openai import OpenAI
+from login_page import login
 import plotly.express as px
+
+if "logged_in" not in st.session_state:
+    st.session_state["logged_in"] = False
+
+if not st.session_state["logged_in"]:
+    login()
 
 client = OpenAI()
 
