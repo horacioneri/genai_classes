@@ -1,0 +1,702 @@
+[
+  {
+    "ComplaintID": 1,
+    "PatientName": "Lisa Finley",
+    "Department": "Gastroenterology",
+    "Complaint": "Facility was not clean.",
+    "Date": "2025-03-28"
+  },
+  {
+    "ComplaintID": 2,
+    "PatientName": "Timothy Gutierrez",
+    "Department": "Pediatrics",
+    "Complaint": "Test results were delayed.",
+    "Date": "2025-03-24"
+  },
+  {
+    "ComplaintID": 3,
+    "PatientName": "Robert Sellers",
+    "Department": "Pediatrics",
+    "Complaint": "Staff was unresponsive during check-in.",
+    "Date": "2025-05-09"
+  },
+  {
+    "ComplaintID": 4,
+    "PatientName": "Leah Cole",
+    "Department": "Gastroenterology",
+    "Complaint": "Test results were delayed.",
+    "Date": "2025-04-16"
+  },
+  {
+    "ComplaintID": 5,
+    "PatientName": "Christopher Terrell",
+    "Department": "Dermatology",
+    "Complaint": "Staff was unresponsive during check-in.",
+    "Date": "2025-05-20"
+  },
+  {
+    "ComplaintID": 6,
+    "PatientName": "Juan Weber",
+    "Department": "Radiology",
+    "Complaint": "Refund has not been processed.",
+    "Date": "2025-05-05"
+  },
+  {
+    "ComplaintID": 7,
+    "PatientName": "Christina Stewart",
+    "Department": "Gastroenterology",
+    "Complaint": "Medication was not available on time.",
+    "Date": "2025-04-05"
+  },
+  {
+    "ComplaintID": 8,
+    "PatientName": "Erika Giles",
+    "Department": "Billing",
+    "Complaint": "Facility was not clean.",
+    "Date": "2025-06-08"
+  },
+  {
+    "ComplaintID": 9,
+    "PatientName": "Susan Alvarez",
+    "Department": "Gastroenterology",
+    "Complaint": "Long waiting time for appointments.",
+    "Date": "2025-02-26"
+  },
+  {
+    "ComplaintID": 10,
+    "PatientName": "Kayla Castro",
+    "Department": "Emergency",
+    "Complaint": "Incorrect charges on the bill.",
+    "Date": "2025-04-10"
+  },
+  {
+    "ComplaintID": 11,
+    "PatientName": "Gregory Robinson",
+    "Department": "Orthopedics",
+    "Complaint": "Refund has not been processed.",
+    "Date": "2025-05-28"
+  },
+  {
+    "ComplaintID": 12,
+    "PatientName": "Jeffrey Solis",
+    "Department": "Dermatology",
+    "Complaint": "Discharge process was slow.",
+    "Date": "2025-05-12"
+  },
+  {
+    "ComplaintID": 13,
+    "PatientName": "Heather Griffith",
+    "Department": "Cardiology",
+    "Complaint": "Insurance claim issues.",
+    "Date": "2025-01-10"
+  },
+  {
+    "ComplaintID": 14,
+    "PatientName": "Christopher Adkins",
+    "Department": "Billing",
+    "Complaint": "Discharge process was slow.",
+    "Date": "2025-02-01"
+  },
+  {
+    "ComplaintID": 15,
+    "PatientName": "Christopher Walters",
+    "Department": "Neurology",
+    "Complaint": "Test was not explained properly.",
+    "Date": "2025-01-01"
+  },
+  {
+    "ComplaintID": 16,
+    "PatientName": "Erica Salazar",
+    "Department": "Dermatology",
+    "Complaint": "Medication was not available on time.",
+    "Date": "2025-04-22"
+  },
+  {
+    "ComplaintID": 17,
+    "PatientName": "Denise Savage",
+    "Department": "Dermatology",
+    "Complaint": "Test was not explained properly.",
+    "Date": "2025-07-10"
+  },
+  {
+    "ComplaintID": 18,
+    "PatientName": "Henry Baker",
+    "Department": "Orthopedics",
+    "Complaint": "Insurance claim issues.",
+    "Date": "2025-05-08"
+  },
+  {
+    "ComplaintID": 19,
+    "PatientName": "Erika Taylor",
+    "Department": "Gastroenterology",
+    "Complaint": "Long waiting time for appointments.",
+    "Date": "2025-03-31"
+  },
+  {
+    "ComplaintID": 20,
+    "PatientName": "Crystal Lindsey",
+    "Department": "Gastroenterology",
+    "Complaint": "Facility was not clean.",
+    "Date": "2025-01-17"
+  },
+  {
+    "ComplaintID": 21,
+    "PatientName": "Aaron Gonzales",
+    "Department": "Pharmacy",
+    "Complaint": "Difficulty scheduling follow-up appointments.",
+    "Date": "2025-06-25"
+  },
+  {
+    "ComplaintID": 22,
+    "PatientName": "Cynthia Miller",
+    "Department": "Orthopedics",
+    "Complaint": "Incorrect charges on the bill.",
+    "Date": "2025-04-28"
+  },
+  {
+    "ComplaintID": 23,
+    "PatientName": "Olivia Byrd",
+    "Department": "Orthopedics",
+    "Complaint": "Discharge process was slow.",
+    "Date": "2025-03-10"
+  },
+  {
+    "ComplaintID": 24,
+    "PatientName": "Natalie Orr",
+    "Department": "Dermatology",
+    "Complaint": "Test was not explained properly.",
+    "Date": "2025-03-29"
+  },
+  {
+    "ComplaintID": 25,
+    "PatientName": "Samantha Weiss",
+    "Department": "Pediatrics",
+    "Complaint": "Test results were delayed.",
+    "Date": "2025-04-10"
+  },
+  {
+    "ComplaintID": 26,
+    "PatientName": "Regina Mcdonald",
+    "Department": "Cardiology",
+    "Complaint": "Test was not explained properly.",
+    "Date": "2025-01-28"
+  },
+  {
+    "ComplaintID": 27,
+    "PatientName": "Peggy Jones",
+    "Department": "Pediatrics",
+    "Complaint": "Insurance claim issues.",
+    "Date": "2025-07-12"
+  },
+  {
+    "ComplaintID": 28,
+    "PatientName": "Megan Figueroa",
+    "Department": "Pharmacy",
+    "Complaint": "Medication was not available on time.",
+    "Date": "2025-04-04"
+  },
+  {
+    "ComplaintID": 29,
+    "PatientName": "Randy Williams",
+    "Department": "Orthopedics",
+    "Complaint": "Difficulty scheduling follow-up appointments.",
+    "Date": "2025-02-20"
+  },
+  {
+    "ComplaintID": 30,
+    "PatientName": "Jeffrey Berry",
+    "Department": "Gastroenterology",
+    "Complaint": "Communication gap from the nurse.",
+    "Date": "2025-06-05"
+  },
+  {
+    "ComplaintID": 31,
+    "PatientName": "Karen Cox",
+    "Department": "Billing",
+    "Complaint": "Confusion about prescribed medication.",
+    "Date": "2025-02-27"
+  },
+  {
+    "ComplaintID": 32,
+    "PatientName": "Sean Rangel",
+    "Department": "Dermatology",
+    "Complaint": "Insurance claim issues.",
+    "Date": "2025-05-28"
+  },
+  {
+    "ComplaintID": 33,
+    "PatientName": "Christopher Daniels",
+    "Department": "Neurology",
+    "Complaint": "Confusion about prescribed medication.",
+    "Date": "2025-05-27"
+  },
+  {
+    "ComplaintID": 34,
+    "PatientName": "Natalie Garrett",
+    "Department": "Dermatology",
+    "Complaint": "Discharge process was slow.",
+    "Date": "2025-04-17"
+  },
+  {
+    "ComplaintID": 35,
+    "PatientName": "Daniel Watts",
+    "Department": "Dermatology",
+    "Complaint": "Refund has not been processed.",
+    "Date": "2025-04-19"
+  },
+  {
+    "ComplaintID": 36,
+    "PatientName": "Benjamin Forbes",
+    "Department": "Emergency",
+    "Complaint": "Doctor was in a rush during consultation.",
+    "Date": "2025-05-25"
+  },
+  {
+    "ComplaintID": 37,
+    "PatientName": "Kristine Sullivan",
+    "Department": "Cardiology",
+    "Complaint": "Confusion about prescribed medication.",
+    "Date": "2025-05-16"
+  },
+  {
+    "ComplaintID": 38,
+    "PatientName": "James Stewart",
+    "Department": "Billing",
+    "Complaint": "Medication was not available on time.",
+    "Date": "2025-05-22"
+  },
+  {
+    "ComplaintID": 39,
+    "PatientName": "James Moore",
+    "Department": "Cardiology",
+    "Complaint": "Long waiting time for appointments.",
+    "Date": "2025-02-26"
+  },
+  {
+    "ComplaintID": 40,
+    "PatientName": "Jessica Sosa",
+    "Department": "Dermatology",
+    "Complaint": "Unclear instructions provided.",
+    "Date": "2025-02-09"
+  },
+  {
+    "ComplaintID": 41,
+    "PatientName": "Larry Martin",
+    "Department": "Billing",
+    "Complaint": "Difficulty scheduling follow-up appointments.",
+    "Date": "2025-02-04"
+  },
+  {
+    "ComplaintID": 42,
+    "PatientName": "Lisa Sawyer",
+    "Department": "Pharmacy",
+    "Complaint": "Incorrect charges on the bill.",
+    "Date": "2025-02-19"
+  },
+  {
+    "ComplaintID": 43,
+    "PatientName": "Monica Wilson",
+    "Department": "Dermatology",
+    "Complaint": "Insurance claim issues.",
+    "Date": "2025-01-16"
+  },
+  {
+    "ComplaintID": 44,
+    "PatientName": "Keith Stephens DVM",
+    "Department": "Billing",
+    "Complaint": "Insurance claim issues.",
+    "Date": "2025-06-16"
+  },
+  {
+    "ComplaintID": 45,
+    "PatientName": "Kristin Huang",
+    "Department": "Gastroenterology",
+    "Complaint": "Test results were delayed.",
+    "Date": "2025-06-13"
+  },
+  {
+    "ComplaintID": 46,
+    "PatientName": "Michelle Miles",
+    "Department": "Billing",
+    "Complaint": "Difficulty scheduling follow-up appointments.",
+    "Date": "2025-03-25"
+  },
+  {
+    "ComplaintID": 47,
+    "PatientName": "Shannon Flores",
+    "Department": "Dermatology",
+    "Complaint": "Insurance claim issues.",
+    "Date": "2025-04-18"
+  },
+  {
+    "ComplaintID": 48,
+    "PatientName": "Tiffany Elliott",
+    "Department": "Billing",
+    "Complaint": "Test was not explained properly.",
+    "Date": "2025-02-17"
+  },
+  {
+    "ComplaintID": 49,
+    "PatientName": "George Santos",
+    "Department": "Billing",
+    "Complaint": "Refund has not been processed.",
+    "Date": "2025-02-23"
+  },
+  {
+    "ComplaintID": 50,
+    "PatientName": "Brenda Hall",
+    "Department": "Radiology",
+    "Complaint": "Doctor was in a rush during consultation.",
+    "Date": "2025-07-20"
+  },
+  {
+    "ComplaintID": 51,
+    "PatientName": "Regina Jensen",
+    "Department": "Radiology",
+    "Complaint": "Test results were delayed.",
+    "Date": "2025-04-15"
+  },
+  {
+    "ComplaintID": 52,
+    "PatientName": "Michael Black",
+    "Department": "Pediatrics",
+    "Complaint": "Unclear instructions provided.",
+    "Date": "2025-03-30"
+  },
+  {
+    "ComplaintID": 53,
+    "PatientName": "Jason Schneider",
+    "Department": "Neurology",
+    "Complaint": "Insurance claim issues.",
+    "Date": "2025-04-25"
+  },
+  {
+    "ComplaintID": 54,
+    "PatientName": "Amanda Ortega",
+    "Department": "Pharmacy",
+    "Complaint": "Facility was not clean.",
+    "Date": "2025-05-26"
+  },
+  {
+    "ComplaintID": 55,
+    "PatientName": "Charles Wright",
+    "Department": "Radiology",
+    "Complaint": "Test was not explained properly.",
+    "Date": "2025-04-09"
+  },
+  {
+    "ComplaintID": 56,
+    "PatientName": "John Scott",
+    "Department": "Radiology",
+    "Complaint": "Refund has not been processed.",
+    "Date": "2025-02-23"
+  },
+  {
+    "ComplaintID": 57,
+    "PatientName": "Garrett Hicks",
+    "Department": "Pediatrics",
+    "Complaint": "Staff was unresponsive during check-in.",
+    "Date": "2025-01-11"
+  },
+  {
+    "ComplaintID": 58,
+    "PatientName": "Gina Chung",
+    "Department": "Orthopedics",
+    "Complaint": "Medication was not available on time.",
+    "Date": "2025-02-07"
+  },
+  {
+    "ComplaintID": 59,
+    "PatientName": "Clayton Jones",
+    "Department": "Gastroenterology",
+    "Complaint": "Test was not explained properly.",
+    "Date": "2025-02-04"
+  },
+  {
+    "ComplaintID": 60,
+    "PatientName": "Jonathan Wilson",
+    "Department": "Pediatrics",
+    "Complaint": "Test was not explained properly.",
+    "Date": "2025-01-13"
+  },
+  {
+    "ComplaintID": 61,
+    "PatientName": "Claire Tate",
+    "Department": "Gastroenterology",
+    "Complaint": "Incorrect charges on the bill.",
+    "Date": "2025-02-09"
+  },
+  {
+    "ComplaintID": 62,
+    "PatientName": "Michael Freeman",
+    "Department": "Cardiology",
+    "Complaint": "Unclear instructions provided.",
+    "Date": "2025-04-15"
+  },
+  {
+    "ComplaintID": 63,
+    "PatientName": "Marcus Tucker",
+    "Department": "Pediatrics",
+    "Complaint": "Doctor was in a rush during consultation.",
+    "Date": "2025-07-02"
+  },
+  {
+    "ComplaintID": 64,
+    "PatientName": "Riley Diaz",
+    "Department": "Gastroenterology",
+    "Complaint": "Test was not explained properly.",
+    "Date": "2025-02-17"
+  },
+  {
+    "ComplaintID": 65,
+    "PatientName": "Jason Murray",
+    "Department": "Radiology",
+    "Complaint": "Refund has not been processed.",
+    "Date": "2025-04-16"
+  },
+  {
+    "ComplaintID": 66,
+    "PatientName": "Jamie Davis",
+    "Department": "Orthopedics",
+    "Complaint": "Staff was unresponsive during check-in.",
+    "Date": "2025-07-14"
+  },
+  {
+    "ComplaintID": 67,
+    "PatientName": "Stephen Rice",
+    "Department": "Billing",
+    "Complaint": "Test results were delayed.",
+    "Date": "2025-03-22"
+  },
+  {
+    "ComplaintID": 68,
+    "PatientName": "Claire Miller",
+    "Department": "Dermatology",
+    "Complaint": "Incorrect charges on the bill.",
+    "Date": "2025-03-29"
+  },
+  {
+    "ComplaintID": 69,
+    "PatientName": "Rebecca Blake",
+    "Department": "Pediatrics",
+    "Complaint": "Doctor was in a rush during consultation.",
+    "Date": "2025-03-29"
+  },
+  {
+    "ComplaintID": 70,
+    "PatientName": "Debbie Vasquez",
+    "Department": "Pharmacy",
+    "Complaint": "Insurance claim issues.",
+    "Date": "2025-02-28"
+  },
+  {
+    "ComplaintID": 71,
+    "PatientName": "Emily Watkins",
+    "Department": "Neurology",
+    "Complaint": "Staff was unresponsive during check-in.",
+    "Date": "2025-07-10"
+  },
+  {
+    "ComplaintID": 72,
+    "PatientName": "Thomas Dyer",
+    "Department": "Pharmacy",
+    "Complaint": "Test results were delayed.",
+    "Date": "2025-01-16"
+  },
+  {
+    "ComplaintID": 73,
+    "PatientName": "Amy Bailey",
+    "Department": "Billing",
+    "Complaint": "Communication gap from the nurse.",
+    "Date": "2025-02-05"
+  },
+  {
+    "ComplaintID": 74,
+    "PatientName": "Leslie Brennan",
+    "Department": "Orthopedics",
+    "Complaint": "Test results were delayed.",
+    "Date": "2025-06-16"
+  },
+  {
+    "ComplaintID": 75,
+    "PatientName": "Jennifer Jackson",
+    "Department": "Neurology",
+    "Complaint": "Long waiting time for appointments.",
+    "Date": "2025-07-16"
+  },
+  {
+    "ComplaintID": 76,
+    "PatientName": "Michelle Miller",
+    "Department": "Pharmacy",
+    "Complaint": "Difficulty scheduling follow-up appointments.",
+    "Date": "2025-03-09"
+  },
+  {
+    "ComplaintID": 77,
+    "PatientName": "Michelle Johnson",
+    "Department": "Dermatology",
+    "Complaint": "Unclear instructions provided.",
+    "Date": "2025-04-21"
+  },
+  {
+    "ComplaintID": 78,
+    "PatientName": "Kevin Willis",
+    "Department": "Billing",
+    "Complaint": "Facility was not clean.",
+    "Date": "2025-07-20"
+  },
+  {
+    "ComplaintID": 79,
+    "PatientName": "Lisa Graham",
+    "Department": "Emergency",
+    "Complaint": "Test was not explained properly.",
+    "Date": "2025-01-13"
+  },
+  {
+    "ComplaintID": 80,
+    "PatientName": "Zachary Jackson",
+    "Department": "Pharmacy",
+    "Complaint": "Communication gap from the nurse.",
+    "Date": "2025-07-08"
+  },
+  {
+    "ComplaintID": 81,
+    "PatientName": "Crystal Li",
+    "Department": "Orthopedics",
+    "Complaint": "Doctor was in a rush during consultation.",
+    "Date": "2025-01-22"
+  },
+  {
+    "ComplaintID": 82,
+    "PatientName": "Pamela Henderson",
+    "Department": "Neurology",
+    "Complaint": "Medication was not available on time.",
+    "Date": "2025-04-30"
+  },
+  {
+    "ComplaintID": 83,
+    "PatientName": "Paul Carney",
+    "Department": "Pharmacy",
+    "Complaint": "Doctor was in a rush during consultation.",
+    "Date": "2025-07-13"
+  },
+  {
+    "ComplaintID": 84,
+    "PatientName": "Chelsey Bradshaw",
+    "Department": "Dermatology",
+    "Complaint": "Difficulty scheduling follow-up appointments.",
+    "Date": "2025-02-13"
+  },
+  {
+    "ComplaintID": 85,
+    "PatientName": "Bailey Taylor DDS",
+    "Department": "Pharmacy",
+    "Complaint": "Discharge process was slow.",
+    "Date": "2025-01-20"
+  },
+  {
+    "ComplaintID": 86,
+    "PatientName": "Jessica Pearson",
+    "Department": "Billing",
+    "Complaint": "Test was not explained properly.",
+    "Date": "2025-07-03"
+  },
+  {
+    "ComplaintID": 87,
+    "PatientName": "April Calderon",
+    "Department": "Neurology",
+    "Complaint": "Confusion about prescribed medication.",
+    "Date": "2025-03-10"
+  },
+  {
+    "ComplaintID": 88,
+    "PatientName": "Scott Wang",
+    "Department": "Neurology",
+    "Complaint": "Confusion about prescribed medication.",
+    "Date": "2025-06-14"
+  },
+  {
+    "ComplaintID": 89,
+    "PatientName": "Andrew Stout",
+    "Department": "Dermatology",
+    "Complaint": "Unclear instructions provided.",
+    "Date": "2025-04-23"
+  },
+  {
+    "ComplaintID": 90,
+    "PatientName": "Michelle Mckee",
+    "Department": "Billing",
+    "Complaint": "Test results were delayed.",
+    "Date": "2025-07-13"
+  },
+  {
+    "ComplaintID": 91,
+    "PatientName": "Cynthia Brown",
+    "Department": "Neurology",
+    "Complaint": "Incorrect charges on the bill.",
+    "Date": "2025-04-01"
+  },
+  {
+    "ComplaintID": 92,
+    "PatientName": "Adriana Lee",
+    "Department": "Cardiology",
+    "Complaint": "Incorrect charges on the bill.",
+    "Date": "2025-01-11"
+  },
+  {
+    "ComplaintID": 93,
+    "PatientName": "William Mclaughlin",
+    "Department": "Billing",
+    "Complaint": "Long waiting time for appointments.",
+    "Date": "2025-04-09"
+  },
+  {
+    "ComplaintID": 94,
+    "PatientName": "Andrew Haynes",
+    "Department": "Billing",
+    "Complaint": "Communication gap from the nurse.",
+    "Date": "2025-07-07"
+  },
+  {
+    "ComplaintID": 95,
+    "PatientName": "Dawn Briggs",
+    "Department": "Pharmacy",
+    "Complaint": "Medication was not available on time.",
+    "Date": "2025-04-16"
+  },
+  {
+    "ComplaintID": 96,
+    "PatientName": "Nichole Cain",
+    "Department": "Cardiology",
+    "Complaint": "Staff was unresponsive during check-in.",
+    "Date": "2025-02-01"
+  },
+  {
+    "ComplaintID": 97,
+    "PatientName": "Carol Velasquez",
+    "Department": "Pharmacy",
+    "Complaint": "Test was not explained properly.",
+    "Date": "2025-01-29"
+  },
+  {
+    "ComplaintID": 98,
+    "PatientName": "Mia Oconnor",
+    "Department": "Gastroenterology",
+    "Complaint": "Doctor was in a rush during consultation.",
+    "Date": "2025-01-12"
+  },
+  {
+    "ComplaintID": 99,
+    "PatientName": "John Smith",
+    "Department": "Cardiology",
+    "Complaint": "Refund has not been processed.",
+    "Date": "2025-07-14"
+  },
+  {
+    "ComplaintID": 100,
+    "PatientName": "Kimberly Erickson",
+    "Department": "Pharmacy",
+    "Complaint": "Doctor was in a rush during consultation.",
+    "Date": "2025-04-28"
+  }
+]

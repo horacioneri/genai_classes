@@ -1,0 +1,8 @@
+streamlit>=1.34
+pandas
+numpy
+openai>=1.30
+pdfplumber
+ics
+plotly
+PyPDF2
