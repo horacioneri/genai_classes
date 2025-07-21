@@ -175,7 +175,7 @@ else:
     if st.button("Reset"):
         for key in ["analysis_done", "ready_for_chat", "messages", "analysis_result"]:
             st.session_state.pop(key, None)
-        st.experimental_rerun()
+        st.rerun()
 
 #with open('json_plot.json', 'r') as f:
 #    data = json.load(f)
