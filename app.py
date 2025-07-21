@@ -15,7 +15,7 @@ st.set_page_config(page_title='Using GenAI in practice', page_icon='', layout = 
 # Display LTP logo
 st.image(image= "images/Asset 6.png", caption = "Powered by", width = 100)
 
-# Create log in state
+# Session state initialization
 if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
 if "analysis_done" not in st.session_state:
@@ -24,6 +24,10 @@ if "ready_for_chat" not in st.session_state:
     st.session_state["ready_for_chat"] = False
 if "text_data" not in st.session_state:
     st.session_state["text_data"] = ""
+if "analysis_result" not in st.session_state:
+    st.session_state["text_data"] = ""
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
 # Log in page
 if not st.session_state["logged_in"]:
@@ -47,10 +51,6 @@ else:
         "claude-3-5-sonnet",
         "claude-3-7-sonnet"
     ]
-
-    # Session state initialization
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
 
     # File uploader
     uploaded_file = st.file_uploader("Upload CSV, JSON, PDF, or ICS file:", type=["csv", "json", "pdf", "ics"])
@@ -127,7 +127,7 @@ else:
                     model=st.session_state["selected_model_a2"],
                     messages=[
                         {"role": "system", "content": "You are an AI agent specialized in answering questions about documents and generating clear data visualizations using plotly when requested. If visualization is requested, provide JSON instructions for the plot, using bar, scatter or boxplots. When generating the json, ensure the size of x and y are the same."},
-                        {"role": "user", "content": f"Here is the document text for context:\n{st.session_state["text_data"][:20000]}\n\nAnd here is the result of a previous structural analysis:\n{analysis_result}"},
+                        {"role": "user", "content": f"Here is the document text for context:\n{st.session_state["text_data"][:20000]}\n\nAnd here is the result of a previous structural analysis:\n{st.session_state["analysis_result"]}"},
                         *[{"role": msg["role"], "content": msg["content"]} for msg in st.session_state.messages]
                     ]
                 )
