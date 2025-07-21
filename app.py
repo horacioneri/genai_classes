@@ -42,8 +42,6 @@ else:
     )
 
     st.title("AI Agent Document Analyzer with Chat and Visualization")
-    st.markdown(st.session_state["analysis_done"])
-    st.markdown(st.session_state["ready_for_chat"])
 
     model_options = [
         "gpt-4o-mini",
