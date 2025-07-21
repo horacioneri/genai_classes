@@ -135,9 +135,9 @@ else:
             with st.spinner("Agent 2 is generating a response..."):
                 # Agent 2: QA and Visualization Generation
                 if st.session_state["selected_context"] == "Original file only":
-                    context = f"Here is the document text for context:\n{st.session_state["text_data"][:20000]}
+                    context = f"Here is the document text for context:\n{st.session_state["text_data"][:20000]}"
                 elif st.session_state["selected_context"] == "Analysis only":
-                    context = f"Here is the result of the analysis of the document text:\n{st.session_state["analysis_result"]}
+                    context = f"Here is the result of the analysis of the document text:\n{st.session_state["analysis_result"]}"
                 else:
                     context = f"Here is the document text for context:\n{st.session_state["text_data"][:20000]}\n\nAnd here is the result of a previous structural analysis:\n{st.session_state["analysis_result"]}"
 
