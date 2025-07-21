@@ -22,6 +22,8 @@ if "analysis_done" not in st.session_state:
     st.session_state["analysis_done"] = False
 if "ready_for_chat" not in st.session_state:
     st.session_state["ready_for_chat"] = False
+if "text_data" not in st.session_state:
+    st.session_state["text_data"] = ""
 
 # Log in page
 if not st.session_state["logged_in"]:
@@ -56,7 +58,7 @@ else:
     parsed_data = None
     text_data = ""
 
-    if uploaded_file and not st.session_state.analysis_done:
+    if uploaded_file:
         file_type = uploaded_file.name.split(".")[-1]
         if file_type == "csv":
             parsed_data = pd.read_csv(uploaded_file)
@@ -74,6 +76,7 @@ else:
                 text_data += f"Event: {event.name}, Begin: {event.begin}, End: {event.end}, Description: {event.description}\n"
 
         st.success(f"File '{uploaded_file.name}' uploaded and parsed.")
+        st.session_state["text_data"] = text_data
 
         # Prompt document analysis
         user_analysis_prompt = st.text_area(
@@ -91,7 +94,7 @@ else:
                     model=st.session_state["selected_model_a1"],
                     messages=[
                         {"role": "system", "content": "You are an AI document analysis agent that extracts main topics, structure, and metadata from provided text."},
-                        {"role": "user", "content": f"{user_analysis_prompt}\n\n{text_data[:20000]}"}
+                        {"role": "user", "content": f"{user_analysis_prompt}\n\n{st.session_state["text_data"][:20000]}"}
                     ]
                 )
                 analysis_result = analysis_response.choices[0].message.content
@@ -102,6 +105,8 @@ else:
         st.subheader("Document Analysis by Agent 1")
         st.markdown(st.session_state["analysis_result"])
         
+        # Chat interface
+        st.subheader("Chat with AI Agent for Q&A and Visualization")
         # Allow to select model
         selected_model_a2 = st.selectbox("Select the model you want to use to chat:", model_options, index=0, key="model2")
         st.session_state["selected_model_a2"] = selected_model_a2
@@ -111,12 +116,10 @@ else:
 
     # Chat UI
     if st.session_state["ready_for_chat"]:
-        # Chat interface
-        st.subheader("Chat with AI Agent for Q&A and Visualization")
 
         user_input = st.chat_input("Ask a question about your document, request visualizations, or insights...")
         
-        if user_input and text_data:
+        if user_input and st.session_state["text_data"]:
             st.session_state.messages.append({"role": "user", "content": user_input})
             with st.spinner("Agent 2 is generating a response..."):
                 # Agent 2: QA and Visualization Generation
@@ -124,7 +127,7 @@ else:
                     model=st.session_state["selected_model_a2"],
                     messages=[
                         {"role": "system", "content": "You are an AI agent specialized in answering questions about documents and generating clear data visualizations using plotly when requested. If visualization is requested, provide JSON instructions for the plot, using bar, scatter or boxplots. When generating the json, ensure the size of x and y are the same."},
-                        {"role": "user", "content": f"Here is the document text for context:\n{text_data[:20000]}\n\nAnd here is the result of a previous structural analysis:\n{analysis_result}"},
+                        {"role": "user", "content": f"Here is the document text for context:\n{st.session_state["text_data"][:20000]}\n\nAnd here is the result of a previous structural analysis:\n{analysis_result}"},
                         *[{"role": msg["role"], "content": msg["content"]} for msg in st.session_state.messages]
                     ]
                 )
