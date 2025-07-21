@@ -98,15 +98,16 @@ else:
                 st.session_state["analysis_result"] = analysis_result
                 st.session_state["analysis_done"] = True
 
-    if st.session_state["analysis_done"] and not st.session_state["ready_for_chat"]:
+    if st.session_state["analysis_done"]:
         st.subheader("Document Analysis by Agent 1")
         st.markdown(st.session_state["analysis_result"])
         
         # Allow to select model
         selected_model_a2 = st.selectbox("Select the model you want to use to chat:", model_options, index=0, key="model2")
         st.session_state["selected_model_a2"] = selected_model_a2
-        if st.button("Continue to chat"):
-            st.session_state["ready_for_chat"] = True
+        if not st.session_state["ready_for_chat"]:
+            if st.button("Continue to chat"):
+                st.session_state["ready_for_chat"] = True
 
     # Chat UI
     if st.session_state["ready_for_chat"]:
