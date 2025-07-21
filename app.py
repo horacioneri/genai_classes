@@ -41,7 +41,7 @@ else:
         api_version=st.secrets["AZURE_OPENAI_API_VERSION"]
     )
 
-    st.title("AI Agent Document Analyzer with Chat and Visualization")
+    st.title("Gen AI workflow to analyze document and visualize information")
 
     model_options = [
         "gpt-4o-mini",
@@ -51,60 +51,65 @@ else:
     ]
 
     # File uploader
-    uploaded_file = st.file_uploader("Upload CSV, JSON, PDF, or ICS file:", type=["csv", "json", "pdf", "ics"])
+    st.header('Document upload', divider='rainbow')
+    with st.expander('**Click to upload file**', expanded=True):
+        uploaded_file = st.file_uploader("Upload CSV, JSON, PDF, or ICS file:", type=["csv", "json", "pdf", "ics"])
 
-    parsed_data = None
-    text_data = ""
+        parsed_data = None
+        text_data = ""
 
-    if uploaded_file:
-        file_type = uploaded_file.name.split(".")[-1]
-        if file_type == "csv":
-            parsed_data = pd.read_csv(uploaded_file)
-            text_data = parsed_data.to_csv(index=False)
-        elif file_type == "json":
-            parsed_data = json.load(uploaded_file)
-            text_data = json.dumps(parsed_data)
-        elif file_type == "pdf":
-            with pdfplumber.open(uploaded_file) as pdf:
-                for page in pdf.pages:
-                    text_data += page.extract_text() + "\n"
-        elif file_type == "ics":
-            c = Calendar(uploaded_file.read().decode())
-            for event in c.events:
-                text_data += f"Event: {event.name}, Begin: {event.begin}, End: {event.end}, Description: {event.description}\n"
+        if uploaded_file:
+            file_type = uploaded_file.name.split(".")[-1]
+            if file_type == "csv":
+                parsed_data = pd.read_csv(uploaded_file)
+                text_data = parsed_data.to_csv(index=False)
+            elif file_type == "json":
+                parsed_data = json.load(uploaded_file)
+                text_data = json.dumps(parsed_data)
+            elif file_type == "pdf":
+                with pdfplumber.open(uploaded_file) as pdf:
+                    for page in pdf.pages:
+                        text_data += page.extract_text() + "\n"
+            elif file_type == "ics":
+                c = Calendar(uploaded_file.read().decode())
+                for event in c.events:
+                    text_data += f"Event: {event.name}, Begin: {event.begin}, End: {event.end}, Description: {event.description}\n"
 
-        st.success(f"File '{uploaded_file.name}' uploaded and parsed.")
-        st.session_state["text_data"] = text_data
+            st.success(f"File '{uploaded_file.name}' uploaded and parsed.")
+            st.session_state["text_data"] = text_data
 
-        # Prompt document analysis
-        user_analysis_prompt = st.text_area(
-            "Provide instructions for how you want the document to be analyzed (structure, type of topics, depth of extraction, etc.)",
-            "Please identify key topics, entities, and propose a structured summary relevant for data visualization."
-        )
-        # Allow to select model
-        selected_model_a1 = st.selectbox("Select the model you want to use to analyze file:", model_options, index=0, key="model1")
-        st.session_state["selected_model_a1"] = selected_model_a1
+        st.header('Document analyzer', divider='rainbow')
+        with st.expander('**Click to analyze document**', expanded=True):
+            # Prompt document analysis
+            user_analysis_prompt = st.text_area(
+                "Provide instructions for how you want the document to be analyzed (structure, type of topics, depth of extraction, etc.)",
+                "Please identify key topics, entities, and propose a structured summary relevant for data visualization."
+            )
+            # Allow to select model
+            selected_model_a1 = st.selectbox("Select the model you want to use to analyze file:", model_options, index=0, key="model1")
+            st.session_state["selected_model_a1"] = selected_model_a1
 
-        # Agent 1: Analyze document
-        if st.button("Run Analysis"):
-            with st.spinner("Analyzing document with Agent 1..."):
-                analysis_response = client.chat.completions.create(
-                    model=st.session_state["selected_model_a1"],
-                    messages=[
-                        {"role": "system", "content": "You are an AI document analysis agent that extracts main topics, structure, and metadata from provided text."},
-                        {"role": "user", "content": f"{user_analysis_prompt}\n\n{st.session_state["text_data"][:20000]}"}
-                    ]
-                )
-                analysis_result = analysis_response.choices[0].message.content
-                st.session_state["analysis_result"] = analysis_result
-                st.session_state["analysis_done"] = True
+            # Agent 1: Analyze document
+            if st.button("Run Analysis"):
+                with st.spinner("Analyzing document with Agent 1..."):
+                    analysis_response = client.chat.completions.create(
+                        model=st.session_state["selected_model_a1"],
+                        messages=[
+                            {"role": "system", "content": "You are an AI document analysis agent that extracts main topics, structure, and metadata from provided text."},
+                            {"role": "user", "content": f"{user_analysis_prompt}\n\n{st.session_state["text_data"][:20000]}"}
+                        ]
+                    )
+                    analysis_result = analysis_response.choices[0].message.content
+                    st.session_state["analysis_result"] = analysis_result
+                    st.session_state["analysis_done"] = True
 
     if st.session_state["analysis_done"]:
-        st.subheader("Document Analysis by Agent 1")
-        st.markdown(st.session_state["analysis_result"])
+        st.subheader("Document Analysis")
+        with st.expander('**Click to see document analysis**', expanded=True):
+            st.markdown(st.session_state["analysis_result"])
         
         # Chat interface
-        st.subheader("Chat with AI Agent for Q&A and Visualization")
+        st.header('Chat with AI about the document', divider='rainbow')
         # Allow to select model
         selected_model_a2 = st.selectbox("Select the model you want to use to chat:", model_options, index=0, key="model2")
         st.session_state["selected_model_a2"] = selected_model_a2
