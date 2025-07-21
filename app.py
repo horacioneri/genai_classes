@@ -141,10 +141,3 @@ else:
 
     st.info("This AI agent app demonstrates GenAI + agents for document understanding, Q&A, and dynamic visualization generation for your practical AI in Practice sessions.")
 
-with open('json_plot.json', 'r') as f:
-    data = json.load(f)
-
-json_data = data
-df = pd.DataFrame(json_data['data'])
-fig = px.scatter(df, x=json_data['x'], y=json_data['y'], color=json_data.get('color'))
-
