@@ -70,7 +70,7 @@ else:
         # Agent 1: Analyze document
         with st.spinner("Analyzing document with Agent 1..."):
             analysis_response = client.chat.completions.create(
-                model="gpt-4o-mini",
+                model="claude-3-5-sonnet",
                 messages=[
                     {"role": "system", "content": "You are an AI document analysis agent that extracts main topics, structure, and metadata from provided text."},
                     {"role": "user", "content": f"{user_analysis_prompt}\n\n{text_data[:20000]}"}
@@ -89,7 +89,7 @@ else:
         with st.spinner("Agent 2 is generating a response..."):
             # Agent 2: QA and Visualization Generation
             chat_response = client.chat.completions.create(
-                model="gpt-4o-mini",
+                model="claude-3-5-sonnet",
                 messages=[
                     {"role": "system", "content": "You are an AI agent specialized in answering questions about documents and generating clear data visualizations using plotly when requested. If visualization is requested, provide JSON instructions for the plot, using bar, scatter or boxplots. When generating the json, ensure the size of x and y are the same."},
                     {"role": "user", "content": f"Here is the document text for context:\n{text_data[:20000]}\n\nAnd here is the result of a previous structural analysis:\n{analysis_result}"},
