@@ -93,71 +93,71 @@ else:
                 st.subheader("Document Analysis by Agent 1")
                 st.markdown(analysis_result)
 
-        if st.button("Continue to chat"):
-            # Chat interface
-            st.subheader("Chat with AI Agent for Q&A and Visualization")
-            # Allow to select model
-            selected_model_a2 = st.selectbox("Select the model you want to use:", model_options, index=0)
-            st.session_state["selected_model_a2"] = selected_model_a2
+            if st.button("Continue to chat"):
+                # Chat interface
+                st.subheader("Chat with AI Agent for Q&A and Visualization")
+                # Allow to select model
+                selected_model_a2 = st.selectbox("Select the model you want to use:", model_options, index=0)
+                st.session_state["selected_model_a2"] = selected_model_a2
 
-            user_input = st.chat_input("Ask a question about your document, request visualizations, or insights...")
+                user_input = st.chat_input("Ask a question about your document, request visualizations, or insights...")
 
-            if user_input and text_data:
-                st.session_state.messages.append({"role": "user", "content": user_input})
-                with st.spinner("Agent 2 is generating a response..."):
-                    # Agent 2: QA and Visualization Generation
-                    chat_response = client.chat.completions.create(
-                        model=st.session_state["selected_model_a2"],
-                        messages=[
-                            {"role": "system", "content": "You are an AI agent specialized in answering questions about documents and generating clear data visualizations using plotly when requested. If visualization is requested, provide JSON instructions for the plot, using bar, scatter or boxplots. When generating the json, ensure the size of x and y are the same."},
-                            {"role": "user", "content": f"Here is the document text for context:\n{text_data[:20000]}\n\nAnd here is the result of a previous structural analysis:\n{analysis_result}"},
-                            *[{"role": msg["role"], "content": msg["content"]} for msg in st.session_state.messages]
-                        ]
-                    )
-                    agent_reply = chat_response.choices[0].message.content
-                    st.session_state.messages.append({"role": "assistant", "content": agent_reply})
+                if user_input and text_data:
+                    st.session_state.messages.append({"role": "user", "content": user_input})
+                    with st.spinner("Agent 2 is generating a response..."):
+                        # Agent 2: QA and Visualization Generation
+                        chat_response = client.chat.completions.create(
+                            model=st.session_state["selected_model_a2"],
+                            messages=[
+                                {"role": "system", "content": "You are an AI agent specialized in answering questions about documents and generating clear data visualizations using plotly when requested. If visualization is requested, provide JSON instructions for the plot, using bar, scatter or boxplots. When generating the json, ensure the size of x and y are the same."},
+                                {"role": "user", "content": f"Here is the document text for context:\n{text_data[:20000]}\n\nAnd here is the result of a previous structural analysis:\n{analysis_result}"},
+                                *[{"role": msg["role"], "content": msg["content"]} for msg in st.session_state.messages]
+                            ]
+                        )
+                        agent_reply = chat_response.choices[0].message.content
+                        st.session_state.messages.append({"role": "assistant", "content": agent_reply})
 
-            # Display conversation
-            for msg in st.session_state.messages:
-                with st.chat_message(msg["role"]):
-                    st.markdown(msg["content"])
+                # Display conversation
+                for msg in st.session_state.messages:
+                    with st.chat_message(msg["role"]):
+                        st.markdown(msg["content"])
 
-            # Attempt to parse JSON plot instructions if present
-            if st.session_state.messages and 'plotly' in st.session_state.messages[-1]['content'].lower():
-                try:
-                    json_match = re.search(r'\{[\s\S]*\}', st.session_state.messages[-1]['content'])
-                    if json_match:
-                        json_data = json.loads(json_match.group())
-                        plot_data = json_data['data'][0]
+                # Attempt to parse JSON plot instructions if present
+                if st.session_state.messages and 'plotly' in st.session_state.messages[-1]['content'].lower():
+                    try:
+                        json_match = re.search(r'\{[\s\S]*\}', st.session_state.messages[-1]['content'])
+                        if json_match:
+                            json_data = json.loads(json_match.group())
+                            plot_data = json_data['data'][0]
 
-                        x = plot_data.get('x')
-                        y = plot_data.get('y')
-                        color = None
-                        if 'marker' in plot_data and 'color' in plot_data['marker']:
-                            color = plot_data['marker']['color']
-                        elif 'color' in plot_data:
-                            color = plot_data['color']
+                            x = plot_data.get('x')
+                            y = plot_data.get('y')
+                            color = None
+                            if 'marker' in plot_data and 'color' in plot_data['marker']:
+                                color = plot_data['marker']['color']
+                            elif 'color' in plot_data:
+                                color = plot_data['color']
 
-                        df = pd.DataFrame({'x': x, 'y': y})
-                        plot_type = plot_data.get('type')
+                            df = pd.DataFrame({'x': x, 'y': y})
+                            plot_type = plot_data.get('type')
 
-                        if plot_type == 'bar':
-                            fig = px.bar(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
-                        elif plot_type == 'scatter':
-                            fig = px.scatter(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
-                        elif plot_type == 'box':
-                            fig = px.box(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
+                            if plot_type == 'bar':
+                                fig = px.bar(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
+                            elif plot_type == 'scatter':
+                                fig = px.scatter(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
+                            elif plot_type == 'box':
+                                fig = px.box(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
+                            else:
+                                fig = px.scatter(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
+
+                            st.plotly_chart(fig, use_container_width=True)
                         else:
-                            fig = px.scatter(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
+                            st.warning("No JSON found in the assistant's message.")
 
-                        st.plotly_chart(fig, use_container_width=True)
-                    else:
-                        st.warning("No JSON found in the assistant's message.")
+                    except Exception as e:
+                        st.warning(f"Tried to generate visualization but encountered an issue: {e}")
 
-                except Exception as e:
-                    st.warning(f"Tried to generate visualization but encountered an issue: {e}")
-
-            st.info("This AI agent app demonstrates GenAI + agents for document understanding, Q&A, and dynamic visualization generation for your practical AI in Practice sessions.")
+                st.info("This AI agent app demonstrates GenAI + agents for document understanding, Q&A, and dynamic visualization generation for your practical AI in Practice sessions.")
 
 #with open('json_plot.json', 'r') as f:
 #    data = json.load(f)
