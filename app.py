@@ -86,7 +86,8 @@ else:
             # Prompt document analysis
             user_analysis_prompt = st.text_area(
                 "Provide instructions for how you want the document to be analyzed (structure, type of topics, depth of extraction, etc.)",
-                "Please identify key topics, entities, and propose a structured summary relevant for data visualization."
+                "Please identify key topics, entities, and propose a structured summary relevant for data visualization.",
+                key="user_analysis_prompt"
             )
             # Allow to select model
             selected_model_a1 = st.selectbox("Select the model you want to use to analyze file:", model_options, index=0, key="model1")
@@ -228,7 +229,7 @@ else:
 
     
     if st.button("Reset"):
-        for key in ["analysis_done", "ready_for_chat", "messages", "analysis_result"]:
+        for key in ["analysis_done", "ready_for_chat", "messages", "analysis_result", "user_analysis_prompt"]:
             st.session_state.pop(key, None)
         st.rerun()
 
