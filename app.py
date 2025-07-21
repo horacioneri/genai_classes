@@ -8,21 +8,28 @@ from openai import AzureOpenAI
 from login_page import login
 import plotly.express as px
 
+# Page config
+st.set_page_config(page_title='Using GenAI in practice', page_icon='', layout = 'wide')
+
+# Display LTP logo
+st.image(image= "images/Asset 6.png", caption = "Powered by", width = 100)
+
+# Create log in state
 if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
 
+# Log in page
 if not st.session_state["logged_in"]:
     login()
 
 else:
+    #GPT set up - Using Streamlit secrets at the moment
     client = AzureOpenAI(
         api_key=st.secrets["AZURE_OPENAI_KEY"],
         azure_endpoint=st.secrets["AZURE_OPENAI_ENDPOINT"],
         api_version=st.secrets["AZURE_OPENAI_API_VERSION"]
     )
 
-
-    st.set_page_config(page_title="AI Agent Document Analyzer", layout="wide")
     st.title("AI Agent Document Analyzer with Chat and Visualization")
 
     # Session state initialization
@@ -64,11 +71,11 @@ else:
                 ]
             )
             analysis_result = analysis_response.choices[0].message.content
-            st.subheader("🪐 Document Analysis by Agent 1")
+            st.subheader("Document Analysis by Agent 1")
             st.markdown(analysis_result)
 
     # Chat interface
-    st.subheader("💬 Chat with AI Agent for Q&A and Visualization")
+    st.subheader("Chat with AI Agent for Q&A and Visualization")
     user_input = st.chat_input("Ask a question about your document, request visualizations, or insights...")
 
     if user_input and text_data:
