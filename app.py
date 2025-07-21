@@ -93,13 +93,12 @@ else:
                 st.subheader("Document Analysis by Agent 1")
                 st.markdown(analysis_result)
 
+            # Chat interface
+            st.subheader("Chat with AI Agent for Q&A and Visualization")
+            # Allow to select model
+            selected_model_a2 = st.selectbox("Select the model you want to use:", model_options, index=0)
+            st.session_state["selected_model_a2"] = selected_model_a2
             if st.button("Continue to chat"):
-                # Chat interface
-                st.subheader("Chat with AI Agent for Q&A and Visualization")
-                # Allow to select model
-                selected_model_a2 = st.selectbox("Select the model you want to use:", model_options, index=0)
-                st.session_state["selected_model_a2"] = selected_model_a2
-
                 user_input = st.chat_input("Ask a question about your document, request visualizations, or insights...")
 
                 if user_input and text_data:
