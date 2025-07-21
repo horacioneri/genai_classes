@@ -116,6 +116,11 @@ else:
         # Allow to select model
         selected_model_a2 = st.selectbox("Select the model you want to use to chat:", model_options, index=0, key="model2")
         st.session_state["selected_model_a2"] = selected_model_a2
+
+        # Allow to select context
+        selected_context = st.selectbox("Select the context you want to give to the model:", ["Original file + Analysis", "Original file only", "Analysis only"], index=0, key="context1")
+        st.session_state["selected_context"] = selected_context
+        
         if not st.session_state["ready_for_chat"]:
             if st.button("Continue to chat"):
                 st.session_state["ready_for_chat"] = True
@@ -129,11 +134,18 @@ else:
             st.session_state.messages.append({"role": "user", "content": user_input})
             with st.spinner("Agent 2 is generating a response..."):
                 # Agent 2: QA and Visualization Generation
+                if st.session_state["selected_context"] == "Original file only":
+                    context = f"Here is the document text for context:\n{st.session_state["text_data"][:20000]}
+                elif st.session_state["selected_context"] == "Analysis only":
+                    context = f"Here is the result of the analysis of the document text:\n{st.session_state["analysis_result"]}
+                else:
+                    context = f"Here is the document text for context:\n{st.session_state["text_data"][:20000]}\n\nAnd here is the result of a previous structural analysis:\n{st.session_state["analysis_result"]}"
+
                 chat_response = client.chat.completions.create(
                     model=st.session_state["selected_model_a2"],
                     messages=[
                         {"role": "system", "content": "You are an AI agent specialized in answering questions about documents and generating clear data visualizations using Plotly when requested. If the user requests a visualization, you must generate JSON instructions for the plot. You can use only bar, scatter, or box plots. When generating the JSON, ensure that the sizes of 'x' and 'y' are the same. Mention the word 'plotly' exactly once in your message, and only when generating a plot. Return only one JSON object using this exact structure:\n\n{\n  \"data\": [{\n    \"type\": \"bar\" | \"scatter\" | \"box\",\n    \"x\": [list of x values],\n    \"y\": [list of y values],\n    \"marker\": {\"color\": \"color_value\"}  // optional\n  }],\n  \"layout\": {\n    \"title\": \"Your plot title\"\n  }\n}\n\nDo not include any extra text before or after the JSON. Use only double quotes around all keys and string values in the JSON. If a plot is not requested, provide only a clear text answer without mentioning 'plotly' and without generating JSON."},
-                        {"role": "user", "content": f"Here is the document text for context:\n{st.session_state["text_data"][:20000]}\n\nAnd here is the result of a previous structural analysis:\n{st.session_state["analysis_result"]}"},
+                        {"role": "user", "content": context},
                         *[{"role": msg["role"], "content": msg["content"]} for msg in st.session_state.messages]
                     ]
                 )
