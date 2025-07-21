@@ -68,3 +68,6 @@ venv/
 
 # Ignore json files if you don't want to commit them
 *.json
+
+# Class framework
+class.txt
