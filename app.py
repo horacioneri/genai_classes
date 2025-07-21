@@ -78,6 +78,7 @@ else:
             st.success(f"File '{uploaded_file.name}' uploaded and parsed.")
             st.session_state["text_data"] = text_data
 
+    if st.session_state["text_data"]:
         st.header('Document analyzer', divider='rainbow')
         with st.expander('**Click to analyze document**', expanded=True):
             # Prompt document analysis
