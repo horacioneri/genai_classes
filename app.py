@@ -75,7 +75,7 @@ else:
             "Please identify key topics, entities, and propose a structured summary relevant for data visualization."
         )
         # Allow to select model
-        selected_model_a1 = st.selectbox("Select the model you want to use:", model_options, index=0)
+        selected_model_a1 = st.selectbox("Select the model you want to use to analyze file:", model_options, index=0, key="model1")
         st.session_state["selected_model_a1"] = selected_model_a1
 
         # Agent 1: Analyze document
@@ -96,7 +96,7 @@ else:
             # Chat interface
             st.subheader("Chat with AI Agent for Q&A and Visualization")
             # Allow to select model
-            selected_model_a2 = st.selectbox("Select the model you want to use:", model_options, index=0)
+            selected_model_a2 = st.selectbox("Select the model you want to use to chat:", model_options, index=0, key="model2")
             st.session_state["selected_model_a2"] = selected_model_a2
             if st.button("Continue to chat"):
                 user_input = st.chat_input("Ask a question about your document, request visualizations, or insights...")
