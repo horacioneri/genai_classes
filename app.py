@@ -7,6 +7,7 @@ from ics import Calendar
 from openai import AzureOpenAI
 import plotly.express as px
 import re
+import ast
 from login_page import login
 
 # Page config
@@ -147,15 +148,31 @@ else:
         # Attempt to parse JSON plot instructions if present
         if st.session_state.messages:
             last_content = st.session_state.messages[-1]['content']
-            # Attempt to extract JSON safely, even if wrapped in ```json ```
-            json_match = re.search(r'```json([\s\S]*?)```', last_content)
-            if not json_match:
-                # fallback: extract first JSON-like block
-                json_match = re.search(r'\{[\s\S]*?\}', last_content)
+            json_block = None
 
+            # Prefer extraction inside ```json ``` blocks
+            json_match = re.search(r'```json\s*([\s\S]*?)\s*```', last_content)
             if json_match:
+                json_block = json_match.group(1).strip()
+            else:
+                # Fallback: find the first { ... } and attempt to parse safely
+                brace_stack = []
+                start_idx = None
+                for idx, char in enumerate(last_content):
+                    if char == '{':
+                        if not brace_stack:
+                            start_idx = idx
+                        brace_stack.append('{')
+                    elif char == '}':
+                        if brace_stack:
+                            brace_stack.pop()
+                            if not brace_stack:
+                                json_block = last_content[start_idx:idx+1]
+                                break
+
+            if json_block:
                 try:
-                    json_data = json.loads(json_match.group(1).strip() if json_match.lastindex else json_match.group().strip())
+                    json_data = json.loads(json_block)
                     plot_data = json_data['data'][0]
 
                     x = plot_data.get('x')
@@ -195,3 +212,4 @@ else:
 #    data = json.load(f)
 
 #json_data = data
+last_content = '{ "data": [{ "type": "bar", "x": ["Gastroenterology", "Pediatrics", "Dermatology", "Billing", "Radiology", "Orthopedics", "Pharmacy", "Emergency"], "y": [10, 7, 12, 10, 2, 6, 2, 2], "marker": {"color": "blue"} }], "layout": { "title": "Number of Complaints per Medical Department" } }'
