@@ -36,8 +36,8 @@ else:
     )
 
     st.title("AI Agent Document Analyzer with Chat and Visualization")
-     st.markdown(st.session_state["analysis_done"])
-     st.markdown(st.session_state["analysis_done"])
+    st.markdown(st.session_state["analysis_done"])
+    st.markdown(st.session_state["ready_for_chat"])
 
     model_options = [
         "gpt-4o-mini",
@@ -112,7 +112,7 @@ else:
     if st.session_state["ready_for_chat"]:
         # Chat interface
         st.subheader("Chat with AI Agent for Q&A and Visualization")
-        
+
         user_input = st.chat_input("Ask a question about your document, request visualizations, or insights...")
         
         if user_input and text_data:
