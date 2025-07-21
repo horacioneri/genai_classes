@@ -73,7 +73,7 @@ else:
                 model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": "You are an AI document analysis agent that extracts main topics, structure, and metadata from provided text."},
-                    {"role": "user", "content": f"{user_analysis_prompt}\n\n{text_data[:10000]}"}
+                    {"role": "user", "content": f"{user_analysis_prompt}\n\n{text_data[:20000]}"}
                 ]
             )
             analysis_result = analysis_response.choices[0].message.content
