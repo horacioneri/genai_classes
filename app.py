@@ -126,7 +126,7 @@ else:
                 chat_response = client.chat.completions.create(
                     model=st.session_state["selected_model_a2"],
                     messages=[
-                        {"role": "system", "content": "You are an AI agent specialized in answering questions about documents and generating clear data visualizations using plotly when requested. If visualization is requested, provide JSON instructions for the plot, using bar, scatter or boxplots. When generating the json, ensure the size of x and y are the same."},
+                        {"role": "system", "content": "You are an AI agent specialized in answering questions about documents and generating clear data visualizations using plotly when requested. If visualization is requested, provide JSON instructions for the plot, using bar, scatter or boxplots. When generating the json, ensure the size of x and y are the same. When generating a plot, and only when generating a plot, mention the word 'plotly'"},
                         {"role": "user", "content": f"Here is the document text for context:\n{st.session_state["text_data"][:20000]}\n\nAnd here is the result of a previous structural analysis:\n{st.session_state["analysis_result"]}"},
                         *[{"role": msg["role"], "content": msg["content"]} for msg in st.session_state.messages]
                     ]
