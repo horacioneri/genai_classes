@@ -36,6 +36,8 @@ else:
     )
 
     st.title("AI Agent Document Analyzer with Chat and Visualization")
+     st.markdown(st.session_state["analysis_done"])
+     st.markdown(st.session_state["analysis_done"])
 
     model_options = [
         "gpt-4o-mini",
@@ -95,12 +97,11 @@ else:
                 analysis_result = analysis_response.choices[0].message.content
                 st.session_state["analysis_result"] = analysis_result
                 st.session_state["analysis_done"] = True
-                st.subheader("Document Analysis by Agent 1")
-                st.markdown(analysis_result)
 
     if st.session_state["analysis_done"] and not st.session_state["ready_for_chat"]:
-        # Chat interface
-        st.subheader("Chat with AI Agent for Q&A and Visualization")
+        st.subheader("Document Analysis by Agent 1")
+        st.markdown(analysis_result)
+        
         # Allow to select model
         selected_model_a2 = st.selectbox("Select the model you want to use to chat:", model_options, index=0, key="model2")
         st.session_state["selected_model_a2"] = selected_model_a2
@@ -109,6 +110,9 @@ else:
 
     # Chat UI
     if st.session_state["ready_for_chat"]:
+        # Chat interface
+        st.subheader("Chat with AI Agent for Q&A and Visualization")
+        
         user_input = st.chat_input("Ask a question about your document, request visualizations, or insights...")
         
         if user_input and text_data:
@@ -167,6 +171,11 @@ else:
                 st.warning(f"Tried to generate visualization but encountered an issue: {e}")
 
         st.info("This AI agent app demonstrates GenAI + agents for document understanding, Q&A, and dynamic visualization generation for your practical AI in Practice sessions.")
+    
+    if st.button("Reset"):
+        for key in ["analysis_done", "ready_for_chat", "messages", "analysis_result"]:
+            st.session_state.pop(key, None)
+        st.experimental_rerun()
 
 #with open('json_plot.json', 'r') as f:
 #    data = json.load(f)
