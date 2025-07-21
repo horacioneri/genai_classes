@@ -6,6 +6,7 @@ import pdfplumber
 from ics import Calendar
 from openai import AzureOpenAI
 import plotly.express as px
+import re
 from login_page import login
 
 # Page config
@@ -90,7 +91,7 @@ else:
             chat_response = client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[
-                    {"role": "system", "content": "You are an AI agent specialized in answering questions about documents and generating clear data visualizations using plotly when requested. If visualization is requested, provide JSON instructions for the plot."},
+                    {"role": "system", "content": "You are an AI agent specialized in answering questions about documents and generating clear data visualizations using plotly when requested. If visualization is requested, provide JSON instructions for the plot, using bar, scatter or boxplots."},
                     {"role": "user", "content": f"Here is the document text for context:\n{text_data[:10000]}"},
                     *[{"role": msg["role"], "content": msg["content"]} for msg in st.session_state.messages]
                 ]
@@ -106,37 +107,35 @@ else:
     # Attempt to parse JSON plot instructions if present
     if st.session_state.messages and 'plotly' in st.session_state.messages[-1]['content'].lower():
         try:
-            json_start = st.session_state.messages[-1]['content'].find('{')
-            json_data = json.loads(st.session_state.messages[-1]['content'][json_start:])
-            plot_data = json_data['data'][0]  # First trace dict
+            json_match = re.search(r'\{[\s\S]*\}', st.session_state.messages[-1]['content'])
+            if json_match:
+                json_data = json.loads(json_match.group())
+                plot_data = json_data['data'][0]
 
-            # Extract x, y, and optional color info
-            x = plot_data.get('x')
-            y = plot_data.get('y')
+                x = plot_data.get('x')
+                y = plot_data.get('y')
+                color = None
+                if 'marker' in plot_data and 'color' in plot_data['marker']:
+                    color = plot_data['marker']['color']
+                elif 'color' in plot_data:
+                    color = plot_data['color']
 
-            # Sometimes color might be under marker.color or just color
-            color = None
-            if 'marker' in plot_data and 'color' in plot_data['marker']:
-                color = plot_data['marker']['color']
-            elif 'color' in plot_data:
-                color = plot_data['color']
+                df = pd.DataFrame({'x': x, 'y': y})
+                plot_type = plot_data.get('type')
 
-            # Create DataFrame from x and y
-            df = pd.DataFrame({'x': x, 'y': y})
+                if plot_type == 'bar':
+                    fig = px.bar(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
+                elif plot_type == 'scatter':
+                    fig = px.scatter(df, x='x', y='y', color=color)
+                elif plot_type == 'box':
+                    fig = px.box(df, x='x', y='y', color=color)
+                else:
+                    fig = px.scatter(df, x='x', y='y', color=color)
 
-            # Create plotly figure depending on plot type
-            plot_type = plot_data.get('type')
-            if plot_type == 'bar':
-                fig = px.bar(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
-            elif plot_type == 'scatter':
-                fig = px.scatter(df, x='x', y='y', color=color)
-            elif plot_type == 'box':
-                # For boxplots, typically you plot y vs category x
-                fig = px.box(df, x='x', y='y', color=color)
+                st.plotly_chart(fig, use_container_width=True)
             else:
-                fig = px.scatter(df, x='x', y='y', color=color)
+                st.warning("No JSON found in the assistant's message.")
 
-            st.plotly_chart(fig, use_container_width=True)
         except Exception as e:
             st.warning(f"Tried to generate visualization but encountered an issue: {e}")
 
@@ -148,4 +147,5 @@ else:
 #json_data = data
 #df = pd.DataFrame(json_data['data'])
 #fig = px.scatter(df, x=json_data['x'], y=json_data['y'], color=json_data.get('color'))
+#fig.show()
 
