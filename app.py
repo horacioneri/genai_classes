@@ -5,8 +5,8 @@ import io
 import pdfplumber
 from ics import Calendar
 from openai import AzureOpenAI
-from login_page import login
 import plotly.express as px
+from login_page import login
 
 # Page config
 st.set_page_config(page_title='Using GenAI in practice', page_icon='', layout = 'wide')
@@ -61,13 +61,18 @@ else:
 
         st.success(f"File '{uploaded_file.name}' uploaded and parsed.")
 
+        # Prompt document analysis
+        user_analysis_prompt = st.text_area(
+            "Provide instructions for how you want the document to be analyzed (structure, type of topics, depth of extraction, etc.)",
+            "Please identify key topics, entities, and propose a structured summary relevant for data visualization."
+        )
         # Agent 1: Analyze document
         with st.spinner("Analyzing document with Agent 1..."):
             analysis_response = client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": "You are an AI document analysis agent that extracts main topics, structure, and metadata from provided text."},
-                    {"role": "user", "content": f"Analyze this document and extract main topics, structure, and metadata:\n\n{text_data[:10000]}"}
+                    {"role": "user", "content": f"{user_analysis_prompt}\n\n{text_data[:10000]}"}
                 ]
             )
             analysis_result = analysis_response.choices[0].message.content
@@ -103,10 +108,43 @@ else:
         try:
             json_start = st.session_state.messages[-1]['content'].find('{')
             json_data = json.loads(st.session_state.messages[-1]['content'][json_start:])
-            df = pd.DataFrame(json_data['data'])
-            fig = px.scatter(df, x=json_data['x'], y=json_data['y'], color=json_data.get('color'))
+            plot_data = json_data['data'][0]  # First trace dict
+
+            # Extract x, y, and optional color info
+            x = plot_data.get('x')
+            y = plot_data.get('y')
+
+            # Sometimes color might be under marker.color or just color
+            color = None
+            if 'marker' in plot_data and 'color' in plot_data['marker']:
+                color = plot_data['marker']['color']
+            elif 'color' in plot_data:
+                color = plot_data['color']
+
+            # Create DataFrame from x and y
+            df = pd.DataFrame({'x': x, 'y': y})
+
+            # Create plotly figure depending on plot type
+            if plot_type == 'bar':
+                fig = px.bar(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
+            elif plot_type == 'scatter':
+                fig = px.scatter(df, x='x', y='y', color=color)
+            elif plot_type == 'box':
+                # For boxplots, typically you plot y vs category x
+                fig = px.box(df, x='x', y='y', color=color)
+            else:
+                fig = px.scatter(df, x='x', y='y', color=color)
+
             st.plotly_chart(fig, use_container_width=True)
         except Exception as e:
             st.warning(f"Tried to generate visualization but encountered an issue: {e}")
 
     st.info("This AI agent app demonstrates GenAI + agents for document understanding, Q&A, and dynamic visualization generation for your practical AI in Practice sessions.")
+
+with open('json_plot.json', 'r') as f:
+    data = json.load(f)
+
+json_data = data
+df = pd.DataFrame(json_data['data'])
+fig = px.scatter(df, x=json_data['x'], y=json_data['y'], color=json_data.get('color'))
+
