@@ -132,7 +132,7 @@ else:
                 chat_response = client.chat.completions.create(
                     model=st.session_state["selected_model_a2"],
                     messages=[
-                        {"role": "system", "content": "You are an AI agent specialized in answering questions about documents and generating clear data visualizations using Plotly when requested. If the user requests a visualization, you must generate JSON instructions for the plot. You can use only bar, scatter, or box plots. When generating the JSON, ensure that the sizes of 'x' and 'y' are the same. Mention the word 'plotly' exactly once in your message, and only when generating a plot. Use the following json structure:\n\n{\n  \"data\": [{\n    \"type\": \"bar\" | \"scatter\" | \"box\",\n    \"x\": [list of x values],\n    \"y\": [list of y values],\n    \"marker\": {\"color\": \"color_value\"}  // optional\n  }],\n  \"layout\": {\n    \"title\": \"Your plot title\"\n  }\n}\n\nIf a plot is not requested, provide only a clear text answer without mentioning 'plotly' and without generating JSON."},
+                        {"role": "system", "content": "You are an AI agent specialized in answering questions about documents and generating clear data visualizations using Plotly when requested. If the user requests a visualization, you must generate JSON instructions for the plot. You can use only bar, scatter, or box plots. When generating the JSON, ensure that the sizes of 'x' and 'y' are the same. Mention the word 'plotly' exactly once in your message, and only when generating a plot. Return only one JSON object using this exact structure:\n\n{\n  \"data\": [{\n    \"type\": \"bar\" | \"scatter\" | \"box\",\n    \"x\": [list of x values],\n    \"y\": [list of y values],\n    \"marker\": {\"color\": \"color_value\"}  // optional\n  }],\n  \"layout\": {\n    \"title\": \"Your plot title\"\n  }\n}\n\nDo not include any extra text before or after the JSON. If a plot is not requested, provide only a clear text answer without mentioning 'plotly' and without generating JSON."},
                         {"role": "user", "content": f"Here is the document text for context:\n{st.session_state["text_data"][:20000]}\n\nAnd here is the result of a previous structural analysis:\n{st.session_state["analysis_result"]}"},
                         *[{"role": msg["role"], "content": msg["content"]} for msg in st.session_state.messages]
                     ]
@@ -174,6 +174,7 @@ else:
                 try:
                     json_data = json.loads(json_block)
                     plot_data = json_data['data'][0]
+                    layout_data = json_data.get('layout', {})
 
                     x = plot_data.get('x')
                     y = plot_data.get('y')
@@ -182,18 +183,29 @@ else:
                         color = plot_data['marker']['color']
                     elif 'color' in plot_data:
                         color = plot_data['color']
+                    mode = plot_data.get('mode', None)
 
                     df = pd.DataFrame({'x': x, 'y': y})
-                    plot_type = plot_data.get('type')
+                    plot_type = plot_data.get('type', 'scatter')
+
+                    title = layout_data.get('title', 'Generated Plot')
+                    xaxis_title = layout_data.get('xaxis_title', 'x')
+                    yaxis_title = layout_data.get('yaxis_title', 'y')
 
                     if plot_type == 'bar':
-                        fig = px.bar(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
+                        fig = px.bar(df, x='x', y='y', title=title, labels={'x': xaxis_title, 'y': yaxis_title},
+                             color_discrete_sequence=[color] if color else None)
                     elif plot_type == 'scatter':
-                        fig = px.scatter(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
+                        fig = px.scatter(df, x='x', y='y', title=title, labels={'x': xaxis_title, 'y': yaxis_title},
+                                 color_discrete_sequence=[color] if color else None)
+                        if mode:
+                            fig.update_traces(mode=mode)
                     elif plot_type == 'box':
-                        fig = px.box(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
+                        fig = px.box(df, x='x', y='y', title=title, labels={'x': xaxis_title, 'y': yaxis_title},
+                             color_discrete_sequence=[color] if color else None)
                     else:
-                        fig = px.scatter(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
+                        fig = px.scatter(df, x='x', y='y', title=title, labels={'x': xaxis_title, 'y': yaxis_title},
+                                 color_discrete_sequence=[color] if color else None)
 
                     st.plotly_chart(fig, use_container_width=True)
 
