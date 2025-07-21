@@ -145,11 +145,17 @@ else:
                 st.markdown(msg["content"])
 
         # Attempt to parse JSON plot instructions if present
-        if st.session_state.messages and 'plotly' in st.session_state.messages[-1]['content'].lower():
-            try:
-                json_match = re.search(r'\{[\s\S]*\}', st.session_state.messages[-1]['content'])
-                if json_match:
-                    json_data = json.loads(json_match.group())
+        if st.session_state.messages:
+            last_content = st.session_state.messages[-1]['content']
+            # Attempt to extract JSON safely, even if wrapped in ```json ```
+            json_match = re.search(r'```json([\s\S]*?)```', last_content)
+            if not json_match:
+                # fallback: extract first JSON-like block
+                json_match = re.search(r'\{[\s\S]*?\}', last_content)
+
+            if json_match:
+                try:
+                    json_data = json.loads(json_match.group(1).strip() if json_match.lastindex else json_match.group().strip())
                     plot_data = json_data['data'][0]
 
                     x = plot_data.get('x')
@@ -173,11 +179,11 @@ else:
                         fig = px.scatter(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
 
                     st.plotly_chart(fig, use_container_width=True)
-                else:
-                    st.warning("No JSON found in the assistant's message.")
 
-            except Exception as e:
-                st.warning(f"Tried to generate visualization but encountered an issue: {e}")
+                except Exception as e:
+                    st.warning(f"Tried to generate visualization but encountered an issue: {e}")
+            #else:
+            #    st.info("No JSON visualization instructions detected in the last assistant message.")
 
     
     if st.button("Reset"):
