@@ -14,6 +14,7 @@ st.set_page_config(page_title='Using GenAI in practice', page_icon='', layout = 
 
 # Display LTP logo
 st.image(image= "images/Asset 6.png", caption = "Powered by", width = 100)
+st.info("This app demonstrates the use of GenAI and agents for document understanding, Q&A, and dynamic visualization generation in practical sessions. It is a simplified version designed for instructional purposes.")
 
 # Session state initialization
 if "logged_in" not in st.session_state:
@@ -178,7 +179,6 @@ else:
             except Exception as e:
                 st.warning(f"Tried to generate visualization but encountered an issue: {e}")
 
-        st.info("This AI agent app demonstrates GenAI + agents for document understanding, Q&A, and dynamic visualization generation for your practical AI in Practice sessions.")
     
     if st.button("Reset"):
         for key in ["analysis_done", "ready_for_chat", "messages", "analysis_result"]:
