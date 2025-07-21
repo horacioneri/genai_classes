@@ -91,7 +91,7 @@ else:
             chat_response = client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[
-                    {"role": "system", "content": "You are an AI agent specialized in answering questions about documents and generating clear data visualizations using plotly when requested. If visualization is requested, provide JSON instructions for the plot, using bar, scatter or boxplots."},
+                    {"role": "system", "content": "You are an AI agent specialized in answering questions about documents and generating clear data visualizations using plotly when requested. If visualization is requested, provide JSON instructions for the plot, using bar, scatter or boxplots. When generating the json, ensure the size of x and y are the same."},
                     {"role": "user", "content": f"Here is the document text for context:\n{text_data[:20000]}\n\nAnd here is the result of a previous structural analysis:\n{analysis_result}"},
                     *[{"role": msg["role"], "content": msg["content"]} for msg in st.session_state.messages]
                 ]
