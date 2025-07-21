@@ -125,6 +125,7 @@ else:
             df = pd.DataFrame({'x': x, 'y': y})
 
             # Create plotly figure depending on plot type
+            plot_type = plot_data.get('type')
             if plot_type == 'bar':
                 fig = px.bar(df, x='x', y='y', color_discrete_sequence=[color] if color else None)
             elif plot_type == 'scatter':
@@ -140,4 +141,11 @@ else:
             st.warning(f"Tried to generate visualization but encountered an issue: {e}")
 
     st.info("This AI agent app demonstrates GenAI + agents for document understanding, Q&A, and dynamic visualization generation for your practical AI in Practice sessions.")
+
+#with open('json_plot.json', 'r') as f:
+#    data = json.load(f)
+
+#json_data = data
+#df = pd.DataFrame(json_data['data'])
+#fig = px.scatter(df, x=json_data['x'], y=json_data['y'], color=json_data.get('color'))
 
