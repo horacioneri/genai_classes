@@ -3,7 +3,7 @@ from datetime import datetime
 
 # Fixed username and password
 USERNAME = "LTPlabs"
-PASSWORD = datetime.today().strftime("%m") + datetime.today().strftime("%Y")
+PASSWORD = "LTPAItraining"
 
 def login():
     # Input fields
