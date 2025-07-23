@@ -235,8 +235,30 @@ else:
                 st.markdown(msg["content"])
 
         if st.session_state.messages:
-            if "plotly" in st.session_state.messages[-1]['content'].lower():
-                render_plotly_json(st.session_state.messages[-1]['content'])
+            last_content = st.session_state.messages[-1]['content']
+            json_block = None
+            if "plotly" in last_content.lower():
+                # Prefer extraction inside ```json ``` blocks
+                json_match = re.search(r'```json\s*([\s\S]*?)\s*```', last_content)
+                if json_match:
+                    json_block = json_match.group(1).strip()
+                else:
+                    # Fallback: find the first { ... } and attempt to parse safely
+                    brace_stack = []
+                    start_idx = None
+                    for idx, char in enumerate(last_content):
+                        if char == '{':
+                            if not brace_stack:
+                                start_idx = idx
+                            brace_stack.append('{')
+                        elif char == '}':
+                            if brace_stack:
+                                brace_stack.pop()
+                                if not brace_stack:
+                                    json_block = last_content[start_idx:idx+1]
+                                    break
+                if json_block:
+                    render_plotly_json(json_block)
 
         # # Attempt to parse JSON plot instructions if present
         # if st.session_state.messages:
