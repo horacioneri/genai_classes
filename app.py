@@ -129,18 +129,18 @@ else:
     # Chat UI
     if st.session_state["ready_for_chat"]:
 
-        user_input = st.chat_input("Ask a question about your document, request visualizations, or insights...")
+        user_input = st.chat_input("Ask a question about your document, request visualizations, or insights... The available visualizations are simples bar charts, scatterplots and box plots")
         
         if user_input and st.session_state["text_data"]:
             st.session_state.messages.append({"role": "user", "content": user_input})
             with st.spinner("Agent 2 is generating a response..."):
                 # Agent 2: QA and Visualization Generation
                 if st.session_state["selected_context"] == "Original file only":
-                    context = f"Here is the document text for context:\n{st.session_state["text_data"][:20000]}"
+                    context = f"Here is the document text for context:\n{st.session_state["text_data"][:30000]}"
                 elif st.session_state["selected_context"] == "Analysis only":
                     context = f"Here is the result of the analysis of the document text:\n{st.session_state["analysis_result"]}"
                 else:
-                    context = f"Here is the document text for context:\n{st.session_state["text_data"][:20000]}\n\nAnd here is the result of a previous structural analysis:\n{st.session_state["analysis_result"]}"
+                    context = f"Here is the document text for context:\n{st.session_state["text_data"][:30000]}\n\nAnd here is the result of a previous structural analysis:\n{st.session_state["analysis_result"]}"
 
                 chat_response = client.chat.completions.create(
                     model=st.session_state["selected_model_a2"],
@@ -216,6 +216,10 @@ else:
                     elif plot_type == 'box':
                         fig = px.box(df, x='x', y='y', title=title, labels={'x': xaxis_title, 'y': yaxis_title},
                              color_discrete_sequence=[color] if color else None)
+                    elif plot_type == 'heatmap':
+                        z = plot_data.get('z')
+                        fig = px.imshow(z, x=x, y=y, color_continuous_scale=color if color else 'Viridis',title=title,
+                            labels={'x': xaxis_title, 'y': yaxis_title, 'color': 'Value'})
                     else:
                         fig = px.scatter(df, x='x', y='y', title=title, labels={'x': xaxis_title, 'y': yaxis_title},
                                  color_discrete_sequence=[color] if color else None)
@@ -237,4 +241,4 @@ else:
 #    data = json.load(f)
 
 #json_data = data
-last_content = '{ "data": [{ "type": "bar", "x": ["Gastroenterology", "Pediatrics", "Dermatology", "Billing", "Radiology", "Orthopedics", "Pharmacy", "Emergency"], "y": [10, 7, 12, 10, 2, 6, 2, 2], "marker": {"color": "blue"} }], "layout": { "title": "Number of Complaints per Medical Department" } }'
+#last_content = '{ "data": [{ "type": "bar", "x": ["Gastroenterology", "Pediatrics", "Dermatology", "Billing", "Radiology", "Orthopedics", "Pharmacy", "Emergency"], "y": [10, 7, 12, 10, 2, 6, 2, 2], "marker": {"color": "blue"} }], "layout": { "title": "Number of Complaints per Medical Department" } }'
