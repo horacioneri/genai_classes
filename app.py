@@ -100,7 +100,7 @@ else:
                         model=st.session_state["selected_model_a1"],
                         messages=[
                             {"role": "system", "content": "You are an AI document analysis agent that extracts main topics, structure, and metadata from provided text."},
-                            {"role": "user", "content": f"{user_analysis_prompt}\n\n{st.session_state["text_data"][:20000]}"}
+                            {"role": "user", "content": f"{user_analysis_prompt}\n\n{st.session_state["text_data"][:30000]}"}
                         ]
                     )
                     analysis_result = analysis_response.choices[0].message.content
