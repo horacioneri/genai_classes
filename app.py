@@ -235,7 +235,7 @@ else:
                 st.markdown(msg["content"])
 
         if st.session_state.messages:
-            if "plotly" in agent_reply.lower():
+            if "plotly" in st.session_state.messages[-1]['content'].lower():
                 render_plotly_json(st.session_state.messages[-1]['content'])
 
         # # Attempt to parse JSON plot instructions if present
