@@ -247,6 +247,7 @@ else:
                             - Structure:
                             - "data": a list of Plotly trace objects with "type" (e.g., "bar", "scatter", "box", "heatmap", "pie", "line", etc.).
                             - Each trace must include necessary fields like "x", "y", "z", "labels", "values", or "mode" as applicable, ensuring all arrays are of matching lengths where required.
+                            - Do not include dtick fields.
                             - "layout":
                                 - "title": Title of the chart.
                                 - "xaxis": {"title": "label"} if applicable.
