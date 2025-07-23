@@ -6,6 +6,7 @@ import pdfplumber
 from ics import Calendar
 from openai import AzureOpenAI
 import plotly.express as px
+import plotly.graph_objects as go
 import re
 import ast
 from login_page import login
@@ -42,6 +43,63 @@ else:
         azure_endpoint=st.secrets["AZURE_OPENAI_ENDPOINT"],
         api_version=st.secrets["AZURE_OPENAI_API_VERSION"]
     )
+
+    #Function to render plotly json
+    def render_plotly_json(json_content):
+        try:
+            # Attempt parsing robustly
+            if isinstance(json_content, str):
+                json_content = json_content.strip()
+                if json_content.startswith("```json"):
+                    json_content = json_content.strip("```json").strip("```").strip()
+                json_content = ast.literal_eval(json_content)
+            
+            if not isinstance(json_content, dict):
+                raise ValueError("Provided content is not a dictionary.")
+
+            fig = go.Figure()
+
+            for trace in json_content.get("data", []):
+                trace_type = trace.get("type", "")
+                mode = trace.get("mode", None)
+                marker = trace.get("marker", {})
+
+                # Standard data extractions
+                x = trace.get("x", None)
+                y = trace.get("y", None)
+                z = trace.get("z", None)
+                labels = trace.get("labels", None)
+                values = trace.get("values", None)
+
+                if trace_type == "bar":
+                    fig.add_trace(go.Bar(x=x, y=y, marker=marker))
+                elif trace_type == "scatter":
+                    fig.add_trace(go.Scatter(x=x, y=y, mode=mode if mode else "markers", marker=marker))
+                elif trace_type == "box":
+                    fig.add_trace(go.Box(x=x, y=y, marker=marker))
+                elif trace_type == "heatmap":
+                    fig.add_trace(go.Heatmap(x=x, y=y, z=z, colorscale="Viridis"))
+                elif trace_type == "pie":
+                    fig.add_trace(go.Pie(labels=labels, values=values))
+                elif trace_type == "line":
+                    fig.add_trace(go.Scatter(x=x, y=y, mode=mode if mode else "lines", marker=marker))
+                else:
+                    st.warning(f"Unsupported trace type: {trace_type}")
+                    return
+
+            layout = json_content.get("layout", {})
+            if layout:
+                fig.update_layout(
+                    title=layout.get("title", ""),
+                    xaxis_title=layout.get("xaxis", {}).get("title", None),
+                    yaxis_title=layout.get("yaxis", {}).get("title", None)
+                )
+
+            st.plotly_chart(fig, use_container_width=True)
+        
+        except Exception as e:
+            st.warning(f"Tried to generate visualization but encountered an issue: {e}")
+            st.json(json_content)
 
     st.title("Gen AI workflow to analyze document and visualize information")
 
@@ -142,10 +200,28 @@ else:
                 else:
                     context = f"Here is the document text for context:\n{st.session_state["text_data"][:30000]}\n\nAnd here is the result of a previous structural analysis:\n{st.session_state["analysis_result"]}"
 
+                #old prompt {"role": "system", "content": "You are an AI agent specialized in answering questions about documents and generating clear data visualizations using Plotly when requested. If the user requests a visualization, you must generate JSON instructions for the plot. You can use only bar, scatter, or box plots. When generating the JSON, ensure that the sizes of 'x' and 'y' are the same. Mention the word 'plotly' exactly once in your message, and only when generating a plot. Return only one JSON object using this exact structure:\n\n{\n  \"data\": [{\n    \"type\": \"bar\" | \"scatter\" | \"box\",\n    \"x\": [list of x values],\n    \"y\": [list of y values],\n    \"marker\": {\"color\": \"color_value\"}  // optional\n  }],\n  \"layout\": {\n    \"title\": \"Your plot title\"\n  }\n}\n\nDo not include any extra text before or after the JSON. Use only double quotes around all keys and string values in the JSON. If a plot is not requested, provide only a clear text answer without mentioning 'plotly' and without generating JSON."},
                 chat_response = client.chat.completions.create(
                     model=st.session_state["selected_model_a2"],
                     messages=[
-                        {"role": "system", "content": "You are an AI agent specialized in answering questions about documents and generating clear data visualizations using Plotly when requested. If the user requests a visualization, you must generate JSON instructions for the plot. You can use only bar, scatter, or box plots. When generating the JSON, ensure that the sizes of 'x' and 'y' are the same. Mention the word 'plotly' exactly once in your message, and only when generating a plot. Return only one JSON object using this exact structure:\n\n{\n  \"data\": [{\n    \"type\": \"bar\" | \"scatter\" | \"box\",\n    \"x\": [list of x values],\n    \"y\": [list of y values],\n    \"marker\": {\"color\": \"color_value\"}  // optional\n  }],\n  \"layout\": {\n    \"title\": \"Your plot title\"\n  }\n}\n\nDo not include any extra text before or after the JSON. Use only double quotes around all keys and string values in the JSON. If a plot is not requested, provide only a clear text answer without mentioning 'plotly' and without generating JSON."},
+                        {"role": "system", "content": """
+                            You are an AI agent specialized in answering questions about documents and generating clear data visualizations using Plotly when requested.
+
+                            When generating a visualization:
+                            - Always generate **valid JSON with double quotes only** so it can be parsed directly.
+                            - Structure:
+                            - "data": a list of Plotly trace objects with "type" (e.g., "bar", "scatter", "box", "heatmap", "pie", "line", etc.).
+                            - Each trace must include necessary fields like "x", "y", "z", "labels", "values", or "mode" as applicable, ensuring all arrays are of matching lengths where required.
+                            - "layout":
+                                - "title": Title of the chart.
+                                - "xaxis": {"title": "label"} if applicable.
+                                - "yaxis": {"title": "label"} if applicable.
+                            - If generating a plot, include the word "plotly" somewhere in your response so it can be identified as a visualization.
+                            - If visualization is not requested, provide a clear structured textual answer instead.
+                            - Ensure the JSON is fully parsable, without trailing commas, and with consistent structure.
+
+                            Only produce the JSON for visualization if explicitly requested or if a visualization would clearly improve understanding of the document.
+                            """},
                         {"role": "user", "content": context},
                         *[{"role": msg["role"], "content": msg["content"]} for msg in st.session_state.messages]
                     ]
