@@ -47,15 +47,18 @@ else:
     #Function to render plotly json
     def render_plotly_json(json_content):
         try:
-            # Attempt parsing robustly
+            # Robust JSON parsing
             if isinstance(json_content, str):
                 json_content = json_content.strip()
                 if json_content.startswith("```json"):
-                    json_content = json_content.strip("```json").strip("```").strip()
-                json_content = ast.literal_eval(json_content)
-            
+                    json_content = json_content[len("```json"):].strip()
+                if json_content.endswith("```"):
+                    json_content = json_content[:-3].strip()
+                
+                json_content = json.loads(json_content)
+
             if not isinstance(json_content, dict):
-                raise ValueError("Provided content is not a dictionary.")
+                raise ValueError("Provided content is not a dictionary after parsing.")
 
             fig = go.Figure()
 
@@ -63,8 +66,9 @@ else:
                 trace_type = trace.get("type", "")
                 mode = trace.get("mode", None)
                 marker = trace.get("marker", {})
+                colorscale = trace.get("colorscale", "Viridis")
+                showscale = trace.get("showscale", True)
 
-                # Standard data extractions
                 x = trace.get("x", None)
                 y = trace.get("y", None)
                 z = trace.get("z", None)
@@ -72,17 +76,42 @@ else:
                 values = trace.get("values", None)
 
                 if trace_type == "bar":
-                    fig.add_trace(go.Bar(x=x, y=y, marker=marker))
+                    fig.add_trace(go.Bar(x=x, y=y, marker=marker, name=trace.get("name", "")))
                 elif trace_type == "scatter":
-                    fig.add_trace(go.Scatter(x=x, y=y, mode=mode if mode else "markers", marker=marker))
+                    fig.add_trace(go.Scatter(
+                        x=x, y=y,
+                        mode=mode if mode else "markers",
+                        marker=marker,
+                        name=trace.get("name", "")
+                    ))
                 elif trace_type == "box":
-                    fig.add_trace(go.Box(x=x, y=y, marker=marker))
+                    fig.add_trace(go.Box(
+                        y=y,
+                        name=trace.get("name", "")
+                    ))
                 elif trace_type == "heatmap":
-                    fig.add_trace(go.Heatmap(x=x, y=y, z=z, colorscale="Viridis"))
+                    fig.add_trace(go.Heatmap(
+                        z=z,
+                        x=x,
+                        y=y,
+                        colorscale=colorscale,
+                        showscale=showscale,
+                        name=trace.get("name", "")
+                    ))
                 elif trace_type == "pie":
-                    fig.add_trace(go.Pie(labels=labels, values=values))
+                    if labels is not None and values is not None:
+                        fig.add_trace(go.Pie(
+                            labels=labels,
+                            values=values,
+                            name=trace.get("name", "")
+                        ))
                 elif trace_type == "line":
-                    fig.add_trace(go.Scatter(x=x, y=y, mode=mode if mode else "lines", marker=marker))
+                    fig.add_trace(go.Scatter(
+                        x=x, y=y,
+                        mode=mode if mode else "lines",
+                        marker=marker,
+                        name=trace.get("name", "")
+                    ))
                 else:
                     st.warning(f"Unsupported trace type: {trace_type}")
                     return
@@ -92,11 +121,17 @@ else:
                 fig.update_layout(
                     title=layout.get("title", ""),
                     xaxis_title=layout.get("xaxis", {}).get("title", None),
-                    yaxis_title=layout.get("yaxis", {}).get("title", None)
+                    yaxis_title=layout.get("yaxis", {}).get("title", None),
+                    height=layout.get("height", None),
+                    width=layout.get("width", None),
+                    margin=layout.get("margin", None)
                 )
 
             st.plotly_chart(fig, use_container_width=True)
-        
+
+        except json.JSONDecodeError as e:
+            st.warning(f"Tried to generate visualization but JSON was malformed: {e}")
+            st.text(json_content)
         except Exception as e:
             st.warning(f"Tried to generate visualization but encountered an issue: {e}")
             st.json(json_content)
