@@ -228,84 +228,88 @@ else:
                 )
                 agent_reply = chat_response.choices[0].message.content
                 st.session_state.messages.append({"role": "assistant", "content": agent_reply})
-
+            
         # Display conversation
         for msg in st.session_state.messages:
             with st.chat_message(msg["role"]):
                 st.markdown(msg["content"])
 
-        # Attempt to parse JSON plot instructions if present
         if st.session_state.messages:
-            last_content = st.session_state.messages[-1]['content']
-            json_block = None
+            if "plotly" in agent_reply.lower():
+                render_plotly_json(st.session_state.messages[-1]['content'])
 
-            # Prefer extraction inside ```json ``` blocks
-            json_match = re.search(r'```json\s*([\s\S]*?)\s*```', last_content)
-            if json_match:
-                json_block = json_match.group(1).strip()
-            else:
-                # Fallback: find the first { ... } and attempt to parse safely
-                brace_stack = []
-                start_idx = None
-                for idx, char in enumerate(last_content):
-                    if char == '{':
-                        if not brace_stack:
-                            start_idx = idx
-                        brace_stack.append('{')
-                    elif char == '}':
-                        if brace_stack:
-                            brace_stack.pop()
-                            if not brace_stack:
-                                json_block = last_content[start_idx:idx+1]
-                                break
+        # # Attempt to parse JSON plot instructions if present
+        # if st.session_state.messages:
+        #     last_content = st.session_state.messages[-1]['content']
+        #     json_block = None
 
-            if json_block:
-                try:
-                    json_data = json.loads(json_block)
-                    plot_data = json_data['data'][0]
-                    layout_data = json_data.get('layout', {})
+        #     # Prefer extraction inside ```json ``` blocks
+        #     json_match = re.search(r'```json\s*([\s\S]*?)\s*```', last_content)
+        #     if json_match:
+        #         json_block = json_match.group(1).strip()
+        #     else:
+        #         # Fallback: find the first { ... } and attempt to parse safely
+        #         brace_stack = []
+        #         start_idx = None
+        #         for idx, char in enumerate(last_content):
+        #             if char == '{':
+        #                 if not brace_stack:
+        #                     start_idx = idx
+        #                 brace_stack.append('{')
+        #             elif char == '}':
+        #                 if brace_stack:
+        #                     brace_stack.pop()
+        #                     if not brace_stack:
+        #                         json_block = last_content[start_idx:idx+1]
+        #                         break
 
-                    x = plot_data.get('x')
-                    y = plot_data.get('y')
-                    color = None
-                    if 'marker' in plot_data and 'color' in plot_data['marker']:
-                        color = plot_data['marker']['color']
-                    elif 'color' in plot_data:
-                        color = plot_data['color']
-                    mode = plot_data.get('mode', None)
+        #     if json_block:
+        #         try:
+        #             json_data = json.loads(json_block)
+        #             plot_data = json_data['data'][0]
+        #             layout_data = json_data.get('layout', {})
 
-                    df = pd.DataFrame({'x': x, 'y': y})
-                    plot_type = plot_data.get('type', 'scatter')
+        #             x = plot_data.get('x')
+        #             y = plot_data.get('y')
+        #             color = None
+        #             if 'marker' in plot_data and 'color' in plot_data['marker']:
+        #                 color = plot_data['marker']['color']
+        #             elif 'color' in plot_data:
+        #                 color = plot_data['color']
+        #             mode = plot_data.get('mode', None)
 
-                    title = layout_data.get('title', 'Generated Plot')
-                    xaxis_title = layout_data.get('xaxis_title', 'x')
-                    yaxis_title = layout_data.get('yaxis_title', 'y')
+        #             df = pd.DataFrame({'x': x, 'y': y})
+        #             plot_type = plot_data.get('type', 'scatter')
 
-                    if plot_type == 'bar':
-                        fig = px.bar(df, x='x', y='y', title=title, labels={'x': xaxis_title, 'y': yaxis_title},
-                             color_discrete_sequence=[color] if color else None)
-                    elif plot_type == 'scatter':
-                        fig = px.scatter(df, x='x', y='y', title=title, labels={'x': xaxis_title, 'y': yaxis_title},
-                                 color_discrete_sequence=[color] if color else None)
-                        if mode:
-                            fig.update_traces(mode=mode)
-                    elif plot_type == 'box':
-                        fig = px.box(df, x='x', y='y', title=title, labels={'x': xaxis_title, 'y': yaxis_title},
-                             color_discrete_sequence=[color] if color else None)
-                    elif plot_type == 'heatmap':
-                        z = plot_data.get('z')
-                        fig = px.imshow(z, x=x, y=y, color_continuous_scale=color if color else 'Viridis',title=title,
-                            labels={'x': xaxis_title, 'y': yaxis_title, 'color': 'Value'})
-                    else:
-                        fig = px.scatter(df, x='x', y='y', title=title, labels={'x': xaxis_title, 'y': yaxis_title},
-                                 color_discrete_sequence=[color] if color else None)
+        #             title = layout_data.get('title', 'Generated Plot')
+        #             xaxis_title = layout_data.get('xaxis_title', 'x')
+        #             yaxis_title = layout_data.get('yaxis_title', 'y')
 
-                    st.plotly_chart(fig, use_container_width=True)
+        #             if plot_type == 'bar':
+        #                 fig = px.bar(df, x='x', y='y', title=title, labels={'x': xaxis_title, 'y': yaxis_title},
+        #                      color_discrete_sequence=[color] if color else None)
+        #             elif plot_type == 'scatter':
+        #                 fig = px.scatter(df, x='x', y='y', title=title, labels={'x': xaxis_title, 'y': yaxis_title},
+        #                          color_discrete_sequence=[color] if color else None)
+        #                 if mode:
+        #                     fig.update_traces(mode=mode)
+        #             elif plot_type == 'box':
+        #                 fig = px.box(df, x='x', y='y', title=title, labels={'x': xaxis_title, 'y': yaxis_title},
+        #                      color_discrete_sequence=[color] if color else None)
+        #             elif plot_type == 'heatmap':
+        #                 z = plot_data.get('z')
+        #                 fig = px.imshow(z, x=x, y=y, color_continuous_scale=color if color else 'Viridis',title=title,
+        #                     labels={'x': xaxis_title, 'y': yaxis_title, 'color': 'Value'})
+        #             else:
+        #                 fig = px.scatter(df, x='x', y='y', title=title, labels={'x': xaxis_title, 'y': yaxis_title},
+        #                          color_discrete_sequence=[color] if color else None)
 
-                except Exception as e:
-                    st.warning(f"Tried to generate visualization but encountered an issue: {e}")
-            #else:
-            #    st.info("No JSON visualization instructions detected in the last assistant message.")
+        #             st.plotly_chart(fig, use_container_width=True)
+
+        #         except Exception as e:
+        #             st.warning(f"Tried to generate visualization but encountered an issue: {e}")
+        #     #else:
+        #     #    st.info("No JSON visualization instructions detected in the last assistant message.")
 
     
     if st.button("Reset"):
